@@ -6,41 +6,42 @@ import com.blulogix.mohamad.repository.BookRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 public class BookController {
     @Autowired
     private BookDao bookDao;
-    @Autowired
-    private BookRepo bookRepo;
 
-    @GetMapping("/get-all")
+    @GetMapping("/users")
     public Iterable<Book> getAll() {
         return bookDao.getAll();
     }
-    @PostMapping(path = "/save")
+    @PostMapping(path = "/user")
     public Book save(@RequestBody Book book) {
         return bookDao.save(book);
     }
 
-    @PostMapping(path = "/save-tses")
-    public Book saveTest(@RequestBody Book book) {
-        return this.bookDao.save(book);
+    @GetMapping("/users/{id}")
+    public Book getById(@PathVariable int id) {
+        return this.bookDao.getById(id);
     }
+    @GetMapping("delete/{id}")
+    public String delete(@PathVariable int id) {
+        return bookDao.delete(id);
 
-//    @GetMapping("/search")
-//    public Iterable<Book> searchBooks(@RequestParam(required = false) String title, @RequestParam(required = false) String author) {
-//        if (title != null && author != null) {
-//            // Search by both title and author
-//            return bookRepo.findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(title, author);
-//        } else if (title != null) {
-//            // Search by title only
-//            return bookRepo.findByTitleContainingIgnoreCase(title);
-//        } else if (author != null) {
-//            // Search by author only
-//            return bookRepo.findByAuthorContainingIgnoreCase(author);
-//        } else {
-//            // If no parameters provided, return all books (or handle differently)
-//            return bookRepo.findAll();
-//        }
-//    }
+    }
+    @GetMapping("/search")
+    public Iterable<Book> searchBooks(@RequestParam(required = false) String title, @RequestParam(required = false) String author) {
+        if (title != null && author != null) {
+            return this.bookDao.getByBoth(title, author);
+        } else if (title != null) {
+            return this.bookDao.getByTitle(title);
+        } else if (author != null) {
+            // Search by author only
+            return this.bookDao.getByAuthor(author);
+        } else {
+            return this.bookDao.getAll();
+        }
+    }
 }
