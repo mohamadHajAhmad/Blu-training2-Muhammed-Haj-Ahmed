@@ -25,8 +25,7 @@ public class BookDao {
     }
 
     public Book save(Book book) {
-        this.bookRepo.save(book);
-        return new Book();
+       return this.bookRepo.save(book);
     }
     public String delete(int id) {
         Optional<Book> book = this.bookRepo.findById(id);
@@ -42,34 +41,16 @@ public class BookDao {
     public Book update(Book book) {
         return this.bookRepo.save(book);
     }
+
     public List<Book> getByTitle(String title) {
-        List<Book> books = this.bookRepo.findAll();
-        List<Book> filteredBooks = new ArrayList<>();
-        for (Book book : books) {
-            if(book.getTitle().equals(title)) {
-                filteredBooks.add(book);
-            }
-        }
-        return filteredBooks;
+      return this.bookRepo.findByTitle(title);
     }
     public List<Book> getByAuthor(String author) {
-        List<Book> books = this.bookRepo.findAll();
-        List<Book> filteredBooks = new ArrayList<>();
-        for (Book book : books) {
-            if(book.getAother().equals(author))
-                filteredBooks.add(book);
-        }
-        return filteredBooks;
+        return this.bookRepo.findByAother(author);
     }
     public List<Book> getByBoth(String author, String title) {
-        List<Book> books = this.bookRepo.findAll();
-        List<Book> filteredBooks = new ArrayList<>();
-        for (Book book : books) {
-            if(book.getAother().equals(author) && book.getTitle().equals(title)) {
-                filteredBooks.add(book);
-            }
-        }
-        return filteredBooks;
+        return this.bookRepo.findByBoth(author, title);
     }
 
-}
+    }
+
