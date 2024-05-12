@@ -4,6 +4,7 @@ import com.blulogix.mohamad.dao.BookDao;
 import com.blulogix.mohamad.entity.Book;
 import com.blulogix.mohamad.repository.BookRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
@@ -17,23 +18,26 @@ public class BookController {
         return bookDao.getAll();
     }
 
-    @PostMapping(path = "/books")
-    public Book save(@RequestBody Book book) {
-        return bookDao.save(book);
-    }
 
     @GetMapping("/books/{id}")
     public Book getById(@PathVariable int id) {
         return this.bookDao.getById(id);
     }
 
-    @GetMapping("books/delete/{id}")
+    @PostMapping(path = "/books")
+    public Book save(@RequestBody Book book) {
+        return bookDao.save(book);
+    }
+
+    @DeleteMapping("books/{id}")
     public String delete(@PathVariable int id) {
         return bookDao.delete(id);
 
     }
     @GetMapping("books/search")
-    public Iterable<Book> searchBooks(@RequestParam(required = false) String title, @RequestParam(required = false) String author) {
+    public Iterable<Book> searchBooks(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String author) {
         if (title != null && author != null) {
             return this.bookDao.getByBoth(title, author);
         } else if (title != null) {
@@ -43,5 +47,12 @@ public class BookController {
         } else {
             return this.bookDao.getAll();
         }
+    }
+
+    @GetMapping("books")
+    public Page<Book> getBooks(
+            @RequestParam(defaultValue = "0") int pageNo,
+            @RequestParam(defaultValue = "10") int pageSize) {
+        return bookDao.getBooksWithPagination(pageNo, pageSize);
     }
 }

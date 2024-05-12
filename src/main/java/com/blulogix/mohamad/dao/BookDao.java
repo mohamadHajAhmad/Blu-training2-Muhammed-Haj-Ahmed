@@ -1,13 +1,11 @@
 package com.blulogix.mohamad.dao;
 
-
 import com.blulogix.mohamad.entity.Book;
 import com.blulogix.mohamad.repository.BookRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,8 +34,8 @@ public class BookDao {
         else {
             return "book is not exist !";
         }
-
     }
+
     public Book update(Book book) {
         return this.bookRepo.save(book);
     }
@@ -50,6 +48,10 @@ public class BookDao {
     }
     public List<Book> getByBoth(String author, String title) {
         return this.bookRepo.findByBoth(author, title);
+    }
+
+    public Page<Book> getBooksWithPagination(int pageNo , int pageSize) {
+        return this.bookRepo.findAll(PageRequest.of(pageNo , pageSize));
     }
 
     }
